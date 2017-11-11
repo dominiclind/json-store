@@ -1,0 +1,6 @@
+$1
+  api.get('/{{camelCase name}}', (req, res) => {
+    res.json({
+      route : '{{properCase name}}'
+    });
+  });

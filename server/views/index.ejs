@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sample Site</title>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jsoneditor/5.9.6/jsoneditor.min.js"></script>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsoneditor/5.9.6/jsoneditor.min.css" />
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.17.0/axios.min.js"></script>
+</head>
+<body>
+		<div id="jsoneditor" style="width: 100vw; height: 100vh;"></div>
+
+  <script>
+      // create the editor
+      var container = document.getElementById("jsoneditor");
+      var options = {onChange: function() {
+      	var data = editor.get();
+
+
+      	axios.post('/api/save', data);
+      }};
+      var editor = new JSONEditor(container, options);
+
+      // set json
+      var json = <%-JSON.stringify(json)%>;
+      editor.set(json);
+
+      // get json
+      var json = editor.get();
+  </script>
+</body>
+</html>

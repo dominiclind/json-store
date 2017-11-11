@@ -1,0 +1,29 @@
+{
+  "name": "api-starter",
+  "version": "0.0.1",
+  "description": "api-starter",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://git.river.se"
+  },
+  "author": "RIVER <doli@river.se>",
+  "dependencies": {
+    "axios": "^0.15.3",
+    "babel": "^5.8.21",
+    "body-parser": "^1.13.3",
+    "compression": "^1.5.2",
+    "cors": "^2.7.1",
+    "dotenv": "^2.0.0",
+    "ejs": "^2.5.7",
+    "express": "^4.13.3",
+    "morgan": "^1.9.0",
+    "resource-router-middleware": "^0.5.1"
+  },
+  "devDependencies": {}
+}
