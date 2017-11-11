@@ -23,7 +23,7 @@ export default ({ config, db }) => {
 	api.get('/workouts', (req, res) => {
 		let rawdata = fs.readFileSync('server/workouts.json');  
 		let json = JSON.parse(rawdata);  
-		res.json({ json });
+		res.json({ ...json });
 	});
 
 	return api;
