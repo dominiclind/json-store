@@ -32,23 +32,34 @@
 </head>
 <body>
 	
-	<ul>
-		<% for(var i=0; i < files.length; i++) { %>
-		   <li>
-		     <a href="/files/<%= files[i].filename %>"><%= files[i].filename %></a>
-		   </li>
-		<% } %>
-		 <li>
-	     <a href="/new">add file</a>
-	   </li>
-	</ul>
+  <div class="container">
+    <h2>All files</h2>
+    <p class="lead">Files on this thing</p>
+    <a type="button" href="/new" class="btn btn-primary" style="margin-bottom:2em;">Add file</a>
+    
 
-
-  <script>
-      $('.button.js-save').on('click', function(){
-        var data = editor.get();
-        axios.post('/api/save', data);
-      })
-  </script>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Filename</th>
+          <th>Url</th>
+          <th> </th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for(var i=0; i < files.length; i++) { %>
+          <tr>
+              <td><%= files[i].filename %></td>
+              <td>
+                <pre>/api/<%= files[i].filename %></pre>
+              </td>
+              <td width="10">
+                <a type="button" href="/files/<%= files[i].filename %>" class="btn btn-info">Edit</a>
+              </td>
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
 </body>
 </html>

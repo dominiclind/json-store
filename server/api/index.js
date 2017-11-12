@@ -25,7 +25,7 @@ export default ({ config, db }) => {
 			console.log(filename);
 			fs.writeFile(process.cwd() + `/server/data/${filename}.json`, JSON.stringify(req.body.data), 'utf8', function (err) {
 		    if (err) {
-		        return console.log(err);
+	        return console.log(err);
 		    }
 				res.json({
 					success: true,
@@ -40,10 +40,21 @@ export default ({ config, db }) => {
 
 
 	// perhaps expose some API metadata at the root
-	api.get('/workouts', (req, res) => {
-		let rawdata = fs.readFileSync('server/workouts.json');  
-		let json = JSON.parse(rawdata);  
-		res.json({ ...json });
+	api.get('/:file?', (req, res) => {
+
+		// let rawdata = fs.readFileSync('server/workouts.json');  
+		// let json = JSON.parse(rawdata);  
+		// res.json({ ...json });
+
+		const filename = req.params.file;
+		fs.readFile(process.cwd() + `/server/data/${filename}.json`, 'utf8', function(err, contents) {
+		  if(!contents){
+		  	res.redirect('/')
+		  } else {
+		  	let json = JSON.parse(contents);
+		  	res.json({...json});
+		  }
+		});		
 	});
 
 	return api;

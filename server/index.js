@@ -45,9 +45,6 @@ app.get('/', function(req, res){
 	  	files
 	  });
 	});
-
-	// let rawdata = fs.readFileSync(__dirname + '/workouts.json');  
-	// let json = JSON.parse(rawdata);  
 });
 
 app.get('/files/:file?', function(req, res){
@@ -60,12 +57,12 @@ app.get('/files/:file?', function(req, res){
 	   	let json = JSON.parse(contents);
 
 	   	res.render('views/index', {
-		  	json
+		  	json,
+		  	filename
 		  });
 	   }
 	});		
-	 
-	// console.log(rawdata);
+	
 	
 });
 
@@ -82,9 +79,11 @@ app.get('/new', function(req, res){
   	}
   });
 	 
-	// console.log(rawdata)
-
 });
+
+// app.get('*', function(req, res){
+// 	res.redirect('/') 
+// });
 
 // api router
 app.use('/api', api({ config }));

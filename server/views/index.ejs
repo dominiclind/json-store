@@ -35,7 +35,8 @@
 <body>
 	<div id="jsoneditor" style="width: 100vw; height: calc(100vh - 50px);"></div>
   <div class="action-buttons">
-    <a class="button js-save">Save</a>
+    <a type="button" href="/" class="btn btn-default">Back to files</a>
+    <a type="button" class="btn btn-success js-save">Save</a>
   </div>
 
   <script>
@@ -43,7 +44,7 @@
       var container = document.getElementById("jsoneditor");
       var options = {};
       var editor = new JSONEditor(container, options);
-
+      var filename = '<%= filename %>';
       // set json
       var json = <%-JSON.stringify(json)%>;
       editor.set(json);
@@ -52,9 +53,11 @@
       var json = editor.get();
 
       // save button action
-      $('.button.js-save').on('click', function(){
+      $('.js-save').on('click', function(){
         var data = editor.get();
-        axios.post('/api/save', data);
+        console.log(data);
+        console.log(filename);
+        axios.post('/api/save', {filename, data});
       })
       
   </script>
