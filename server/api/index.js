@@ -1,6 +1,7 @@
 import { version } from '../../package.json';
 import { Router } from 'express';
 import fs from 'fs';
+import uuid from 'node-uuid';
 
 export default ({ config, db }) => {
 	let api = Router();
@@ -14,8 +15,27 @@ export default ({ config, db }) => {
 	// perhaps expose some API metadata at the root
 	api.post('/save', (req, res) => {
 
-		fs.writeFileSync('server/workouts.json', JSON.stringify(req.body));  
-		res.json({ version });
+		let filename = req.body.filename;
+
+		if(filename == 'new'){
+			filename = uuid.v4();
+		}
+
+		if(filename){
+			console.log(filename);
+			fs.writeFile(process.cwd() + `/server/data/${filename}.json`, JSON.stringify(req.body.data), 'utf8', function (err) {
+		    if (err) {
+		        return console.log(err);
+		    }
+				res.json({
+					success: true,
+					path: `/files/${filename}`
+				}); 
+			}); 
+		} else{
+			//fs.writeFileSync('data/workouts.json', JSON.stringify(req.body));  
+			res.json({ version });
+		}
 	});
 
 

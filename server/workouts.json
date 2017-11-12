@@ -1,1 +1,1 @@
-{"name":"Paulina","age":23,"gender":"Female","department":"Dominic","car":"Honda"}
+{"string":"bar","array":[1,2,3],"arrayOfObjects":[{"foo":"bar"},{"foo":"bar"}],"object":{"foo":"bar"}}

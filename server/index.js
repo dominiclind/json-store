@@ -6,8 +6,14 @@ import bodyParser from 'body-parser';
 import middleware from './middleware';
 import api from './api';
 import config from './config.json';
+import getFiles from './utils/getFiles';
 import fs from 'fs';
+import glob from 'glob';
+import sassMiddleware from 'node-sass-middleware';
+import path from 'path';
 
+var srcPath = __dirname + '/scss';
+var destPath = __dirname + '/public/styles';
 
 let app = express();
 app.server = http.createServer(app);
@@ -28,17 +34,56 @@ app.use(bodyParser.json({
 	limit : config.bodyLimit
 }));
 
+app.use('/public', express.static(path.join(__dirname, 'public')));
 
 app.use(middleware({ config }));
 
 app.get('/', function(req, res){
 
-	let rawdata = fs.readFileSync(__dirname + '/workouts.json');  
-	let json = JSON.parse(rawdata);  
+	getFiles(__dirname + '/data/*.json').then(files => {
+	  res.render('views/files', {
+	  	files
+	  });
+	});
 
-  res.render('views/index', {
-  	json
+	// let rawdata = fs.readFileSync(__dirname + '/workouts.json');  
+	// let json = JSON.parse(rawdata);  
+});
+
+app.get('/files/:file?', function(req, res){
+
+	const filename = req.params.file;
+	fs.readFile(__dirname + `/data/${filename}.json`, 'utf8', function(err, contents) {
+	   if(!contents){
+	   	res.redirect('/')
+	   } else {
+	   	let json = JSON.parse(contents);
+
+	   	res.render('views/index', {
+		  	json
+		  });
+	   }
+	});		
+	 
+	// console.log(rawdata);
+	
+});
+
+app.get('/new', function(req, res){
+
+ 	res.render('views/new', {
+  	json : {
+  		string:'bar',
+  		array: [1,2,3],
+  		arrayOfObjects : [{foo:'bar'}, {foo:'bar'}],
+  		object: {
+  			foo: 'bar'
+  		}
+  	}
   });
+	 
+	// console.log(rawdata)
+
 });
 
 // api router

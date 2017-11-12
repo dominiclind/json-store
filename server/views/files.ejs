@@ -8,9 +8,7 @@
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsoneditor/5.9.6/jsoneditor.min.css" />
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.17.0/axios.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vex-js/4.0.1/css/vex.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vex-js/4.0.1/css/vex-theme-wireframe.min.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/vex-js/4.0.1/js/vex.min.js"></script>
+
     <style>
       .action-buttons{
         height: 50px;
@@ -33,30 +31,24 @@
     </style>
 </head>
 <body>
-	<div id="jsoneditor" style="width: 100vw; height: calc(100vh - 50px);"></div>
-  <div class="action-buttons">
-    <a class="button js-save">Save</a>
-  </div>
+	
+	<ul>
+		<% for(var i=0; i < files.length; i++) { %>
+		   <li>
+		     <a href="/files/<%= files[i].filename %>"><%= files[i].filename %></a>
+		   </li>
+		<% } %>
+		 <li>
+	     <a href="/new">add file</a>
+	   </li>
+	</ul>
+
 
   <script>
-      // create the editor
-      var container = document.getElementById("jsoneditor");
-      var options = {};
-      var editor = new JSONEditor(container, options);
-
-      // set json
-      var json = <%-JSON.stringify(json)%>;
-      editor.set(json);
-
-      // get json
-      var json = editor.get();
-
-      // save button action
       $('.button.js-save').on('click', function(){
         var data = editor.get();
         axios.post('/api/save', data);
       })
-      
   </script>
 </body>
 </html>
