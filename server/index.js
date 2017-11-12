@@ -11,6 +11,8 @@ import fs from 'fs';
 import glob from 'glob';
 import sassMiddleware from 'node-sass-middleware';
 import path from 'path';
+import url from 'url';
+
 
 var srcPath = __dirname + '/scss';
 var destPath = __dirname + '/public/styles';
@@ -39,15 +41,20 @@ app.use('/public', express.static(path.join(__dirname, 'public')));
 app.use(middleware({ config }));
 
 app.get('/', function(req, res){
+	var hostname = req.headers.host; // hostname = 'localhost:8080'
+  var pathname = url.parse(req.url).pathname; // pathname = '/MyApp'
+  var baseURL = 'http://' + hostname;
 
 	getFiles(__dirname + '/data/*.json').then(files => {
 	  res.render('views/files', {
-	  	files
+	  	files,
+	  	baseURL
 	  });
 	});
 });
 
 app.get('/files/:file?', function(req, res){
+
 
 	const filename = req.params.file;
 	fs.readFile(__dirname + `/data/${filename}.json`, 'utf8', function(err, contents) {
