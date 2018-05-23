@@ -54,7 +54,9 @@ app.get('/', function(req, res){
 });
 
 app.get('/files/:file?', function(req, res){
-
+	var hostname = req.headers.host; // hostname = 'localhost:8080'
+  var pathname = url.parse(req.url).pathname; // pathname = '/MyApp'
+  var baseURL = 'http://' + hostname;
 
 	const filename = req.params.file;
 	fs.readFile(__dirname + `/data/${filename}.json`, 'utf8', function(err, contents) {
@@ -64,6 +66,7 @@ app.get('/files/:file?', function(req, res){
 	   	let json = JSON.parse(contents);
 
 	   	res.render('views/index', {
+	   				baseURL,
 		  	json,
 		  	filename
 		  });
@@ -74,8 +77,12 @@ app.get('/files/:file?', function(req, res){
 });
 
 app.get('/new', function(req, res){
+	var hostname = req.headers.host; // hostname = 'localhost:8080'
+  var pathname = url.parse(req.url).pathname; // pathname = '/MyApp'
+  var baseURL = 'http://' + hostname;
 
  	res.render('views/new', {
+ 		baseURL,
   	json : {
   		string:'bar',
   		array: [1,2,3],

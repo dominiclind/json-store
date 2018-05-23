@@ -8,11 +8,9 @@
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsoneditor/5.9.6/jsoneditor.min.css" />
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.17.0/axios.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vex-js/4.0.1/css/vex.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vex-js/4.0.1/css/vex-theme-wireframe.min.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/vex-js/4.0.1/js/vex.combined.min.js"></script>
-    <script>vex.defaultOptions.className = 'vex-theme-wireframe'</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.11.5/sweetalert2.all.min.js"></script>
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.11.5/sweetalert2.min.css" />
     <style>
       .action-buttons{
         height: 50px;
@@ -44,7 +42,10 @@
   <script>
       // create the editor
       var container = document.getElementById("jsoneditor");
-      var options = {};
+      var options = {
+        mode: 'tree',
+        modes: ['code','tree'],
+      };
       var editor = new JSONEditor(container, options);
 
       // set json
@@ -52,25 +53,49 @@
       editor.set(json);
 
       // get json
+      var baseURL = '<%= baseURL %>';
       var json = editor.get();
 
       // save button action
       $('.js-save').on('click', function(){
         var data = editor.get();
         
-        vex.dialog.prompt({
-          message: 'Name your file',
-          placeholder: 'test data',
-          callback: function (value) {
-            axios.post('/api/save', {
-              data:data,
-              filename: value || 'new'
-            }).then(res => {
-              const redirect = res.data.path;
-              window.location = redirect;
+        swal({
+          title: 'Name your file',
+          input: 'text',
+          showCancelButton: true,
+          confirmButtonText: 'Submit',
+          showLoaderOnConfirm: true,
+          preConfirm: function (filename) {
+            return new Promise(function (resolve, reject) {
+              setTimeout(function() {
+                if (filename === 'taken@example.com') {
+                  reject('This email is already taken.')
+                } else {
+                  axios.post('/api/save', {
+                    data:data,
+                    filename: filename || 'new'
+                  }).then(res => {
+                    const redirect = res.data.path;
+                    resolve(redirect)
+                  })
+                }
+              }, 2000)
             })
-          }
+          },
+          allowOutsideClick: false
+        }).then(function (url) {
+
+          swal({
+            type: 'success',
+            title: 'File saved!',
+            html: baseURL + url
+          }).then(res => {
+            window.location = baseURL;
+          })
         })
+
+    
 
       })
   </script>

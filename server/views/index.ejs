@@ -10,8 +10,17 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.17.0/axios.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vex-js/4.0.1/css/vex.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vex-js/4.0.1/css/vex-theme-wireframe.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.9/ace.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vex-js/4.0.1/js/vex.min.js"></script>
+
     <style>
+      .editors{
+        display:flex;
+        flex-direction: row; 
+      }
+      .editors .editor{
+        flex:1;
+      }
       .action-buttons{
         height: 50px;
         display: flex;
@@ -28,12 +37,14 @@
         color: white;
         /* border-radius: 9999px; */
         font-size: .9em;
-
       }
     </style>
 </head>
 <body>
-	<div id="jsoneditor" style="width: 100vw; height: calc(100vh - 50px);"></div>
+  <div class="editors show-code">
+    <div id="jsoneditor-code" class="editor" style="height: calc(100vh - 50px);"></div>
+    <!-- <div id="jsoneditor-visual" class="editor" style="height: calc(100vh - 50px);"></div> -->
+  </div>
   <div class="action-buttons">
     <a type="button" href="/" class="btn btn-default">Back to files</a>
     <a type="button" class="btn btn-success js-save">Save</a>
@@ -41,20 +52,27 @@
 
   <script>
       // create the editor
-      var container = document.getElementById("jsoneditor");
-      var options = {};
-      var editor = new JSONEditor(container, options);
+      var containerCode = document.getElementById("jsoneditor-code");
+      var containerVisual = document.getElementById("jsoneditor-visual");
+      
+      var optionsCode = {
+        mode: 'tree',
+        modes: ['code','tree'],
+      };
+      var optionsVisual = {};
+
+      var editorCode = new JSONEditor(containerCode, optionsCode);
+      // var editorVisual = new JSONEditor(containerVisual, optionsVisual);
+      var baseURL = '<%= baseURL %>';
       var filename = '<%= filename %>';
+
       // set json
       var json = <%-JSON.stringify(json)%>;
-      editor.set(json);
-
-      // get json
-      var json = editor.get();
+      editorCode.set(json);
 
       // save button action
       $('.js-save').on('click', function(){
-        var data = editor.get();
+        var data = editorCode.get();
         console.log(data);
         console.log(filename);
         axios.post('/api/save', {filename, data});
